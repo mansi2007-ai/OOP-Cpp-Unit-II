@@ -1,66 +1,46 @@
-// Real-Time Application 2: Generic Sorting Service
+// Real-Time Application 1: Smart Agriculture Sensor Monitor
 
 #include <iostream>
 #include <string>
 #include <vector>
 using namespace std;
 
-template <typename T>
-void sortItems(vector<T>& values) {
-    for (size_t i = 0; i < values.size(); i++) {
-        for (size_t j = i + 1; j < values.size(); j++) {
+class SoilSensor {
+private:
+    string sensorId;
+    double moistureLevel;
+    string timestamp;
 
-            if (values[j] < values[i]) {
-                T temp = values[i];
-                values[i] = values[j];
-                values[j] = temp;
-            }
-        }
+public:
+    SoilSensor(string id, double moisture, string time)
+        : sensorId(id), moistureLevel(moisture), timestamp(time) {}
+
+    void readSensor(double newMoisture, string newTime) {
+        moistureLevel = newMoisture;
+        timestamp = newTime;
     }
-}
 
-template <typename T>
-void displayItems(const vector<T>& values) {
-    for (const auto& value : values)
-        cout << value << " ";
-
-    cout << endl;
-}
+    void displayData() const {
+        cout << "Sensor: " << sensorId
+             << " | Moisture: " << moistureLevel << "%"
+             << " | Time: " << timestamp << endl;
+    }
+};
 
 int main() {
-    vector<int> ids{
-        64, 34, 25, 12, 22, 11, 90
-    };
+    vector<SoilSensor> farmSensors;
 
-    vector<double> scores{
-        3.14, 2.71, 1.41, 9.99, 0.50
-    };
+    farmSensors.emplace_back("S001", 45.2, "08:00");
+    farmSensors.emplace_back("S002", 52.8, "08:00");
+    farmSensors.emplace_back("S003", 38.5, "08:00");
 
-    vector<string> cities{
-        "Pune", "Mumbai", "Nashik", "Aurangabad"
-    };
+    cout << "=== Morning Sensor Readings ===" << endl;
 
-    cout << "Integer IDs before sorting: ";
-    displayItems(ids);
+    for (const auto& sensor : farmSensors)
+        sensor.displayData();
 
-    sortItems(ids);
+    farmSensors[0].readSensor(47.5, "09:00");
 
-    cout << "Integer IDs after sorting: ";
-    displayItems(ids);
-
-    cout << "Scores before sorting: ";
-    displayItems(scores);
-
-    sortItems(scores);
-
-    cout << "Scores after sorting: ";
-    displayItems(scores);
-
-    cout << "Cities before sorting: ";
-    displayItems(cities);
-
-    sortItems(cities);
-
-    cout << "Cities after sorting: ";
-    displayItems(cities);
+    cout << "\n=== Updated Reading ===" << endl;
+    farmSensors[0].displayData();
 }
